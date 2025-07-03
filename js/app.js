@@ -1,11 +1,15 @@
 import DashboardController from './controllers/DashboardController';
 
+// Inicialización con verificación de carga
+console.log("Inicializando aplicación...");
+
 document.addEventListener('DOMContentLoaded', () => {
     try {
-        new DashboardController();
-        console.log('Aplicación inicializada correctamente');
+        console.log("DOM completamente cargado");
+        const controller = new DashboardController();
+        console.log("Controlador inicializado correctamente");
     } catch (error) {
-        console.error('Error al inicializar la aplicación:', error);
-        alert('Error al cargar la aplicación. Por favor recarga la página.');
+        console.error("Error al inicializar:", error);
+        alert("Error crítico: " + error.message);
     }
 });

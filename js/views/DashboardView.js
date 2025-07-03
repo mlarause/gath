@@ -1,118 +1,177 @@
-import UserModel from '../models/UserModel.js';
-import DashboardView from '../views/dashboardView.js';
-
-export default class DashboardController {
+export default class DashboardView {
     constructor() {
-        this.view = new DashboardView();
-        this.userModel = new UserModel();
-        this.currentEditingId = null;
-        this.init();
+        console.log("Inicializando DashboardView");
+        this.modal = new bootstrap.Modal(document.getElementById('userModal'));
+        this.currentUserElement = document.getElementById('currentUser');
     }
 
-    init() {
-        this.setupEventListeners();
-        this.showUsersSection();
-        this.setupModalListener();
-        this.setupSidebarToggle();
+    displayUsers(users) {
+        console.log("Mostrando usuarios en la vista", users);
+        const tableBody = document.querySelector('#usersTable tbody');
+        
+        if (!tableBody) {
+            console.error("No se encontró el elemento #usersTable tbody");
+            return;
+        }
+
+        tableBody.innerHTML = users.map(user => `
+            <tr>
+                <td>${user.documentNumber}</td>
+                <td>${user.firstName} ${user.lastName}</td>
+                <td>${user.email}</td>
+                <td>${user.role}</td>
+                <td>
+                    <button class="btn btn-sm btn-primary edit-user" data-id="${user.id}">
+                        <i class="bi bi-pencil-square"></i> Editar
+                    </button>
+                    <button class="btn btn-sm btn-danger delete-user" data-id="${user.id}">
+                        <i class="bi bi-trash"></i> Eliminar
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+
+        console.log("Usuarios renderizados correctamente");
     }
 
-    setupEventListeners() {
-        // Delegación de eventos para elementos dinámicos
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('#addUserBtn')) {
-                this.showUserForm();
-            } else if (e.target.closest('.edit-user')) {
-                const docNumber = e.target.closest('.edit-user').dataset.id;
-                this.showUserForm(docNumber);
-            } else if (e.target.closest('.delete-user')) {
-                const docNumber = e.target.closest('.delete-user').dataset.id;
-                this.deleteUser(docNumber);
-            }
-        });
+    showUserForm(user = null) {
+        console.log("Mostrando formulario para usuario:", user);
+        const modalTitle = document.getElementById('userModalLabel');
+        const form = document.getElementById('userForm');
+        
+        if (!modalTitle || !form) {
+            console.error("Elementos del modal no encontrados");
+            return;
+        }
+
+        if (user) {
+            modalTitle.textContent = 'Editar Usuario';
+            form.innerHTML = this.getEditFormHTML(user);
+        } else {
+            modalTitle.textContent = 'Crear Nuevo Usuario';
+            form.innerHTML = this.getAddFormHTML();
+        }
+
+        this.modal.show();
     }
 
-    setupModalListener() {
-        const modalSave = document.getElementById('modalSave');
-        if (modalSave) {
-            modalSave.addEventListener('click', () => {
-                this.saveUser();
-            });
+    getAddFormHTML() {
+        return `
+            <div class="mb-3">
+                <label for="documentNumber" class="form-label">Número de Documento</label>
+                <input type="text" class="form-control" id="documentNumber" name="documentNumber" required>
+            </div>
+            <div class="mb-3">
+                <label for="firstName" class="form-label">Primer Nombre</label>
+                <input type="text" class="form-control" id="firstName" name="firstName" required>
+            </div>
+            <div class="mb-3">
+                <label for="lastName" class="form-label">Primer Apellido</label>
+                <input type="text" class="form-control" id="lastName" name="lastName" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="mb-3">
+                <label for="role" class="form-label">Rol</label>
+                <select class="form-select" id="role" name="role" required>
+                    <option value="admin">Administrador</option>
+                    <option value="user" selected>Usuario</option>
+                    <option value="recruiter">Reclutador</option>
+                </select>
+            </div>
+        `;
+    }
+
+    getEditFormHTML(user) {
+        return `
+            <input type="hidden" name="id" value="${user.id}">
+            <div class="mb-3">
+                <label for="documentNumber" class="form-label">Número de Documento</label>
+                <input type="text" class="form-control" id="documentNumber" 
+                       name="documentNumber" value="${user.documentNumber}" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="firstName" class="form-label">Primer Nombre</label>
+                <input type="text" class="form-control" id="firstName" 
+                       name="firstName" value="${user.firstName}" required>
+            </div>
+            <div class="mb-3">
+                <label for="lastName" class="form-label">Primer Apellido</label>
+                <input type="text" class="form-control" id="lastName" 
+                       name="lastName" value="${user.lastName}" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control" id="email" 
+                       name="email" value="${user.email}" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password" 
+                       name="password" placeholder="Dejar en blanco para no cambiar">
+            </div>
+            <div class="mb-3">
+                <label for="role" class="form-label">Rol</label>
+                <select class="form-select" id="role" name="role" required>
+                    <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Administrador</option>
+                    <option value="user" ${user.role === 'user' ? 'selected' : ''}>Usuario</option>
+                    <option value="recruiter" ${user.role === 'recruiter' ? 'selected' : ''}>Reclutador</option>
+                </select>
+            </div>
+        `;
+    }
+
+    hideModal() {
+        console.log("Ocultando modal");
+        this.modal.hide();
+    }
+
+    showSuccess(message) {
+        console.log("Mostrando mensaje de éxito:", message);
+        this.showAlert(message, 'success');
+    }
+
+    showError(message) {
+        console.error("Mostrando mensaje de error:", message);
+        this.showAlert(message, 'danger');
+    }
+
+    showAlert(message, type) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+        alertDiv.role = 'alert';
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+
+        const container = document.getElementById('alertsContainer') || document.body;
+        container.prepend(alertDiv);
+
+        setTimeout(() => {
+            alertDiv.classList.remove('show');
+            setTimeout(() => alertDiv.remove(), 150);
+        }, 5000);
+    }
+
+    showCurrentUser(userInfo) {
+        if (this.currentUserElement) {
+            this.currentUserElement.textContent = userInfo;
         }
     }
 
     setupSidebarToggle() {
-        const sidebarCollapse = document.getElementById('sidebarCollapse');
-        if (sidebarCollapse) {
-            sidebarCollapse.addEventListener('click', () => {
+        const sidebarToggle = document.getElementById('sidebarCollapse');
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
                 document.getElementById('sidebar').classList.toggle('active');
             });
-        }
-    }
-
-    showUsersSection() {
-        try {
-            const users = this.userModel.getAllUsers();
-            this.view.showUsersSection(users);
-        } catch (error) {
-            console.error('Error al mostrar usuarios:', error);
-            this.view.showError('Error al cargar usuarios');
-        }
-    }
-
-    showUserForm(docNumber = null) {
-        this.currentEditingId = docNumber;
-        const user = docNumber ? this.userModel.getUserByDocNumber(docNumber) : null;
-        this.view.showUserForm(user);
-    }
-
-    saveUser() {
-        try {
-            const formId = this.currentEditingId ? 'editUserForm' : 'addUserForm';
-            const form = document.getElementById(formId);
-            
-            if (!form) {
-                throw new Error('Formulario no encontrado');
-            }
-
-            const formData = new FormData(form);
-            const userData = {
-                documentNumber: formData.get('documentNumber'),
-                firstName: formData.get('firstName'),
-                lastName: formData.get('lastName'),
-                email: formData.get('email'),
-                role: formData.get('role')
-            };
-
-            const password = formData.get('password');
-            if (password) userData.password = password;
-
-            if (this.currentEditingId) {
-                this.userModel.updateUser(this.currentEditingId, userData);
-                this.view.showSuccess('Usuario actualizado correctamente');
-            } else {
-                if (!password) throw new Error('La contraseña es requerida');
-                this.userModel.createUser(userData);
-                this.view.showSuccess('Usuario creado correctamente');
-            }
-
-            this.view.hideModal();
-            this.showUsersSection();
-        } catch (error) {
-            console.error('Error al guardar usuario:', error);
-            this.view.showError(error.message);
-        }
-    }
-
-    deleteUser(docNumber) {
-        if (!confirm('¿Está seguro de eliminar este usuario?')) return;
-
-        try {
-            this.userModel.deleteUser(docNumber);
-            this.view.showSuccess('Usuario eliminado correctamente');
-            this.showUsersSection();
-        } catch (error) {
-            console.error('Error al eliminar usuario:', error);
-            this.view.showError(error.message);
         }
     }
 }
