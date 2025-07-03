@@ -1,5 +1,5 @@
 import UserModel from '../models/UserModel.js';
-import DashboardView from '../views/DashboardView.js';
+import DashboardView from '../views/dashboardView.js';
 
 export default class DashboardController {
     constructor() {
