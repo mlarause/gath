@@ -1,5 +1,5 @@
-import UserModel from '../models/UserModel.js';
-import DashboardView from '../views/DashboardView.js';
+import UserModel from '../models/userModel.js';
+import DashboardView from '../views/dashboardView.js';
 
 export default class DashboardController {
     constructor() {
@@ -13,6 +13,7 @@ export default class DashboardController {
         this.setupEventListeners();
         this.showUsersSection();
         this.setupModalListener();
+        this.setupSidebarToggle();
     }
 
     setupEventListeners() {
@@ -31,9 +32,21 @@ export default class DashboardController {
     }
 
     setupModalListener() {
-        document.getElementById('modalSave')?.addEventListener('click', () => {
-            this.saveUser();
-        });
+        const modalSave = document.getElementById('modalSave');
+        if (modalSave) {
+            modalSave.addEventListener('click', () => {
+                this.saveUser();
+            });
+        }
+    }
+
+    setupSidebarToggle() {
+        const sidebarCollapse = document.getElementById('sidebarCollapse');
+        if (sidebarCollapse) {
+            sidebarCollapse.addEventListener('click', () => {
+                document.getElementById('sidebar').classList.toggle('active');
+            });
+        }
     }
 
     showUsersSection() {
@@ -41,7 +54,8 @@ export default class DashboardController {
             const users = this.userModel.getAllUsers();
             this.view.showUsersSection(users);
         } catch (error) {
-            this.view.showError(error.message);
+            console.error('Error al mostrar usuarios:', error);
+            this.view.showError('Error al cargar usuarios');
         }
     }
 
@@ -55,8 +69,12 @@ export default class DashboardController {
         try {
             const formId = this.currentEditingId ? 'editUserForm' : 'addUserForm';
             const form = document.getElementById(formId);
-            const formData = new FormData(form);
             
+            if (!form) {
+                throw new Error('Formulario no encontrado');
+            }
+
+            const formData = new FormData(form);
             const userData = {
                 documentNumber: formData.get('documentNumber'),
                 firstName: formData.get('firstName'),
@@ -80,6 +98,7 @@ export default class DashboardController {
             this.view.hideModal();
             this.showUsersSection();
         } catch (error) {
+            console.error('Error al guardar usuario:', error);
             this.view.showError(error.message);
         }
     }
@@ -92,6 +111,7 @@ export default class DashboardController {
             this.view.showSuccess('Usuario eliminado correctamente');
             this.showUsersSection();
         } catch (error) {
+            console.error('Error al eliminar usuario:', error);
             this.view.showError(error.message);
         }
     }

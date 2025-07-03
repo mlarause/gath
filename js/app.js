@@ -1,4 +1,4 @@
-import DashboardController from './controllers/DashboardController.js';
+import DashboardController from './controllers/DashboardController';
 
 document.addEventListener('DOMContentLoaded', () => {
     try {
