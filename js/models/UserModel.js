@@ -1,4 +1,4 @@
-class UserModel {
+export default class UserModel {
     constructor() {
         this.loadUsers();
     }
@@ -13,11 +13,9 @@ class UserModel {
             role: "admin"
         };
         
-        const storedUsers = localStorage.getItem('users');
-        this.users = storedUsers ? JSON.parse(storedUsers) : [defaultUser];
+        this.users = JSON.parse(localStorage.getItem('users')) || [defaultUser];
         
-        // Si no existían usuarios, guardamos el admin por defecto
-        if (!storedUsers) {
+        if (!localStorage.getItem('users')) {
             this._saveToLocalStorage();
         }
     }
@@ -47,7 +45,6 @@ class UserModel {
         const index = this.users.findIndex(user => user.documentNumber === docNumber);
         if (index === -1) throw new Error('Usuario no encontrado');
 
-        // Verificar email único (excepto para el mismo usuario)
         if (this.users.some((user, i) => i !== index && user.email === userData.email)) {
             throw new Error('El correo ya está en uso por otro usuario');
         }

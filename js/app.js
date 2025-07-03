@@ -1,6 +1,5 @@
-// Inicializar la aplicación
+import DashboardController from './controllers/DashboardController';
+
 document.addEventListener('DOMContentLoaded', () => {
-    const model = new UserModel();
-    const view = new AuthView();
-    new AuthController(model, view);
+    new DashboardController();
 });
