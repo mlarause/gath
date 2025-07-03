@@ -1,33 +1,64 @@
-class DashboardController {
-    constructor(view) {
-        this.view = view;
+// dashboardController.js - Versión completa y corregida
+
+import UserModel from '../models/UserModel.js';
+import RoleModel from '../models/roleModel.js';
+import DashboardView from '../views/dashboardView.js';
+
+export default class DashboardController {
+    constructor() {
+        this.view = new DashboardView();
         this.userModel = new UserModel();
         this.roleModel = new RoleModel();
-        this.vacancyModel = new VacancyModel();
-        this.categoryModel = new CategoryModel();
-        this.professionModel = new ProfessionModel();
-        this.resumeModel = new ResumeModel();
-        this.experienceModel = new ExperienceModel();
-        this.studyModel = new StudyModel();
-        this.vacationModel = new VacationModel();
-        this.peaceSafeModel = new PeaceSafeModel();
-        this.disabilityModel = new DisabilityModel();
-        this.postulationModel = new PostulationModel();
-        
-        // Configurar event listeners para el menú
-        this.setupMenuListeners();
+        this.currentEditingId = null;
+        this.init();
     }
-    
-    setupMenuListeners() {
-        document.querySelectorAll('[data-section]').forEach(item => {
-            item.addEventListener('click', e => {
+
+    init() {
+        this.setupEventListeners();
+        this.showUsersSection(); // Mostrar usuarios por defecto al cargar
+        this.showCurrentUser();
+    }
+
+    setupEventListeners() {
+        // Delegación de eventos para elementos dinámicos
+        document.addEventListener('click', (e) => {
+            // Menú lateral
+            if (e.target.matches('[data-section]')) {
                 e.preventDefault();
                 const section = e.target.getAttribute('data-section');
                 this.loadSection(section);
-            });
+            }
+
+            // CRUD Usuarios
+            if (e.target.matches('#addUserBtn')) {
+                this.showUserForm();
+            } else if (e.target.matches('.edit-user')) {
+                const docNumber = e.target.dataset.id;
+                this.showUserForm(docNumber);
+            } else if (e.target.matches('.delete-user')) {
+                const docNumber = e.target.dataset.id;
+                this.deleteUser(docNumber);
+            }
+
+            // Modal
+            if (e.target.matches('#modalSave')) {
+                this.saveUser();
+            }
+        });
+
+        // Sidebar toggle
+        document.getElementById('sidebarCollapse')?.addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('active');
         });
     }
-    
+
+    showCurrentUser() {
+        const user = JSON.parse(sessionStorage.getItem('currentUser'));
+        if (user) {
+            this.view.showCurrentUser(`${user.firstName} ${user.lastName}`);
+        }
+    }
+
     loadSection(section) {
         switch(section) {
             case 'users':
@@ -36,117 +67,71 @@ class DashboardController {
             case 'roles':
                 this.showRolesSection();
                 break;
-            // Agregar más casos para otras secciones
             default:
-                this.view.mainContent.innerHTML = `
-                    <div class="jumbotron bg-light p-5 rounded">
-                        <h1 class="display-4">${section.charAt(0).toUpperCase() + section.slice(1)}</h1>
-                        <p class="lead">Contenido de la sección ${section}.</p>
-                    </div>`;
+                this.view.showDefaultSection(section);
         }
     }
-    
+
+    // Sección Usuarios
     showUsersSection() {
-        const users = this.userModel.getAllUsers();
-        this.view.showUsersSection(users);
-        
-        // Configurar event listeners para los botones
-        document.getElementById('addUserBtn')?.addEventListener('click', () => {
-            this.handleShowUserForm();
-        });
-        
-        // Delegación de eventos para los botones de editar y eliminar
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('.edit-user')) {
-                const docNumber = e.target.closest('.edit-user').getAttribute('data-id');
-                this.handleShowUserForm(docNumber);
-            }
-            
-            if (e.target.closest('.delete-user')) {
-                const docNumber = e.target.closest('.delete-user').getAttribute('data-id');
-                this.handleDeleteUser(docNumber);
-            }
-        });
-        
-        // Configurar el botón de guardar del modal
-        document.getElementById('modalSave')?.addEventListener('click', () => {
-            this.handleSaveUser();
-        });
-    }
-
-    handleShowUserForm(docNumber = null) {
-        const user = docNumber ? this.userModel.getUserByDocNumber(docNumber) : null;
-        this.view.showUserForm(user);
-        this.currentEditingUser = docNumber;
-    }
-
-    handleSaveUser() {
-        const form = document.getElementById(this.currentEditingUser ? 'editUserForm' : 'addUserForm');
-        const formData = new FormData(form);
-        
-        const userData = {
-            documentNumber: formData.get('documentNumber'),
-            firstName: formData.get('firstName'),
-            lastName: formData.get('lastName'),
-            email: formData.get('email'),
-            role: formData.get('role')
-        };
-        
-        // Solo actualizar contraseña si se proporcionó
-        const password = formData.get('password');
-        if (password) {
-            userData.password = password;
-        }
-        
         try {
-            if (this.currentEditingUser) {
-                // Editar usuario existente
-                this.userModel.updateUser(this.currentEditingUser, userData);
-                this.view.showSuccess('Usuario actualizado correctamente');
-            } else {
-                // Crear nuevo usuario (requiere contraseña)
-                if (!password) {
-                    throw new Error('La contraseña es requerida para nuevos usuarios');
-                }
-                this.userModel.createUser(userData);
-                this.view.showSuccess('Usuario creado correctamente');
-            }
-            
-            this.view.modal.hide();
-            this.showUsersSection(); // Refrescar la lista
+            const users = this.userModel.getAllUsers();
+            this.view.showUsersSection(users);
         } catch (error) {
             this.view.showError(error.message);
         }
     }
 
-    handleDeleteUser(docNumber) {
-        if (confirm('¿Está seguro de eliminar este usuario?')) {
-            try {
-                // No permitir eliminar al usuario admin
-                if (docNumber === "123456789") {
-                    throw new Error('No se puede eliminar al usuario administrador principal');
+    showUserForm(docNumber = null) {
+        this.currentEditingId = docNumber;
+        const user = docNumber ? this.userModel.getUserByDocNumber(docNumber) : null;
+        this.view.showUserForm(user);
+    }
+
+    async saveUser() {
+        try {
+            const formId = this.currentEditingId ? 'editUserForm' : 'addUserForm';
+            const form = document.getElementById(formId);
+            const formData = new FormData(form);
+            const userData = Object.fromEntries(formData.entries());
+
+            if (this.currentEditingId) {
+                await this.userModel.updateUser(this.currentEditingId, userData);
+                this.view.showSuccess('Usuario actualizado correctamente');
+            } else {
+                if (!userData.password) {
+                    throw new Error('La contraseña es requerida');
                 }
-                
-                this.userModel.deleteUser(docNumber);
-                this.view.showSuccess('Usuario eliminado correctamente');
-                this.showUsersSection();
-            } catch (error) {
-                this.view.showError(error.message);
+                await this.userModel.createUser(userData);
+                this.view.showSuccess('Usuario creado correctamente');
             }
+
+            this.view.hideModal();
+            this.showUsersSection();
+        } catch (error) {
+            this.view.showError(error.message);
         }
     }
-    
-    showRolesSection() {
-        const roles = this.roleModel.getAllRoles();
-        this.view.showRolesSection(roles);
-        
-        // Configurar event listeners para los botones
-        document.getElementById('addRoleBtn')?.addEventListener('click', () => {
-            this.view.showRoleForm();
-        });
-        
-        // Agregar listeners para editar/eliminar roles
+
+    async deleteUser(docNumber) {
+        if (!confirm('¿Está seguro de eliminar este usuario?')) return;
+
+        try {
+            await this.userModel.deleteUser(docNumber);
+            this.view.showSuccess('Usuario eliminado correctamente');
+            this.showUsersSection();
+        } catch (error) {
+            this.view.showError(error.message);
+        }
     }
-    
-    // Métodos para otras secciones...
+
+    // Sección Roles
+    showRolesSection() {
+        try {
+            const roles = this.roleModel.getAllRoles();
+            this.view.showRolesSection(roles);
+        } catch (error) {
+            this.view.showError(error.message);
+        }
+    }
 }
