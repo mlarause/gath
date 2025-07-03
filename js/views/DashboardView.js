@@ -1,7 +1,19 @@
-export default class DashboardView {
+Class DashboardView {
     constructor() {
         console.log("Inicializando DashboardView");
-        this.modal = new bootstrap.Modal(document.getElementById('userModal'));
+        
+        // Inicialización segura del modal
+        const modalElement = document.getElementById('userModal');
+        if (modalElement) {
+            this.modal = new bootstrap.Modal(modalElement);
+        } else {
+            console.error("Elemento #userModal no encontrado");
+            this.modal = {
+                show: () => console.warn("Modal no disponible"),
+                hide: () => console.warn("Modal no disponible")
+            };
+        }
+        
         this.currentUserElement = document.getElementById('currentUser');
     }
 
@@ -14,24 +26,27 @@ export default class DashboardView {
             return;
         }
 
-        tableBody.innerHTML = users.map(user => `
+        tableBody.innerHTML = users.map(user => this._createUserRow(user)).join('');
+        console.log("Usuarios renderizados correctamente");
+    }
+
+    _createUserRow(user) {
+        return `
             <tr>
-                <td>${user.documentNumber}</td>
-                <td>${user.firstName} ${user.lastName}</td>
-                <td>${user.email}</td>
-                <td>${user.role}</td>
+                <td>${user.documentNumber || ''}</td>
+                <td>${(user.firstName || '') + ' ' + (user.lastName || '')}</td>
+                <td>${user.email || ''}</td>
+                <td>${user.role || 'user'}</td>
                 <td>
-                    <button class="btn btn-sm btn-primary edit-user" data-id="${user.id}">
+                    <button class="btn btn-sm btn-primary edit-user" data-id="${user.id || ''}">
                         <i class="bi bi-pencil-square"></i> Editar
                     </button>
-                    <button class="btn btn-sm btn-danger delete-user" data-id="${user.id}">
+                    <button class="btn btn-sm btn-danger delete-user" data-id="${user.id || ''}">
                         <i class="bi bi-trash"></i> Eliminar
                     </button>
                 </td>
             </tr>
-        `).join('');
-
-        console.log("Usuarios renderizados correctamente");
+        `;
     }
 
     showUserForm(user = null) {
@@ -44,84 +59,77 @@ export default class DashboardView {
             return;
         }
 
-        if (user) {
-            modalTitle.textContent = 'Editar Usuario';
-            form.innerHTML = this.getEditFormHTML(user);
-        } else {
-            modalTitle.textContent = 'Crear Nuevo Usuario';
-            form.innerHTML = this.getAddFormHTML();
-        }
-
+        modalTitle.textContent = user ? 'Editar Usuario' : 'Crear Nuevo Usuario';
+        form.innerHTML = user ? this._getEditFormHTML(user) : this._getAddFormHTML();
+        
         this.modal.show();
     }
 
-    getAddFormHTML() {
+    _getAddFormHTML() {
         return `
             <div class="mb-3">
-                <label for="documentNumber" class="form-label">Número de Documento</label>
-                <input type="text" class="form-control" id="documentNumber" name="documentNumber" required>
+                <label class="form-label">Número de Documento</label>
+                <input type="text" class="form-control" name="documentNumber" required>
             </div>
             <div class="mb-3">
-                <label for="firstName" class="form-label">Primer Nombre</label>
-                <input type="text" class="form-control" id="firstName" name="firstName" required>
+                <label class="form-label">Primer Nombre</label>
+                <input type="text" class="form-control" name="firstName" required>
             </div>
             <div class="mb-3">
-                <label for="lastName" class="form-label">Primer Apellido</label>
-                <input type="text" class="form-control" id="lastName" name="lastName" required>
+                <label class="form-label">Primer Apellido</label>
+                <input type="text" class="form-control" name="lastName" required>
             </div>
             <div class="mb-3">
-                <label for="email" class="form-label">Correo Electrónico</label>
-                <input type="email" class="form-control" id="email" name="email" required>
+                <label class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control" name="email" required>
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="password" name="password" required>
+                <label class="form-label">Contraseña</label>
+                <input type="password" class="form-control" name="password" required>
             </div>
             <div class="mb-3">
-                <label for="role" class="form-label">Rol</label>
-                <select class="form-select" id="role" name="role" required>
+                <label class="form-label">Rol</label>
+                <select class="form-select" name="role" required>
                     <option value="admin">Administrador</option>
                     <option value="user" selected>Usuario</option>
-                    <option value="recruiter">Reclutador</option>
                 </select>
             </div>
         `;
     }
 
-    getEditFormHTML(user) {
+    _getEditFormHTML(user) {
         return `
-            <input type="hidden" name="id" value="${user.id}">
+            <input type="hidden" name="id" value="${user.id || ''}">
             <div class="mb-3">
-                <label for="documentNumber" class="form-label">Número de Documento</label>
-                <input type="text" class="form-control" id="documentNumber" 
-                       name="documentNumber" value="${user.documentNumber}" readonly>
+                <label class="form-label">Número de Documento</label>
+                <input type="text" class="form-control" name="documentNumber" 
+                       value="${user.documentNumber || ''}" readonly>
             </div>
             <div class="mb-3">
-                <label for="firstName" class="form-label">Primer Nombre</label>
-                <input type="text" class="form-control" id="firstName" 
-                       name="firstName" value="${user.firstName}" required>
+                <label class="form-label">Primer Nombre</label>
+                <input type="text" class="form-control" name="firstName" 
+                       value="${user.firstName || ''}" required>
             </div>
             <div class="mb-3">
-                <label for="lastName" class="form-label">Primer Apellido</label>
-                <input type="text" class="form-control" id="lastName" 
-                       name="lastName" value="${user.lastName}" required>
+                <label class="form-label">Primer Apellido</label>
+                <input type="text" class="form-control" name="lastName" 
+                       value="${user.lastName || ''}" required>
             </div>
             <div class="mb-3">
-                <label for="email" class="form-label">Correo Electrónico</label>
-                <input type="email" class="form-control" id="email" 
-                       name="email" value="${user.email}" required>
+                <label class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control" name="email" 
+                       value="${user.email || ''}" required>
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="password" 
-                       name="password" placeholder="Dejar en blanco para no cambiar">
+                <label class="form-label">Contraseña</label>
+                <input type="password" class="form-control" name="password" 
+                       placeholder="Dejar en blanco para no cambiar">
             </div>
             <div class="mb-3">
-                <label for="role" class="form-label">Rol</label>
-                <select class="form-select" id="role" name="role" required>
+                <label class="form-label">Rol</label>
+                <select class="form-select" name="role" required>
                     <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Administrador</option>
-                    <option value="user" ${user.role === 'user' ? 'selected' : ''}>Usuario</option>
-                    <option value="recruiter" ${user.role === 'recruiter' ? 'selected' : ''}>Reclutador</option>
+                    <option value="user" ${!user.role || user.role === 'user' ? 'selected' : ''}>Usuario</option>
                 </select>
             </div>
         `;
@@ -133,22 +141,20 @@ export default class DashboardView {
     }
 
     showSuccess(message) {
-        console.log("Mostrando mensaje de éxito:", message);
-        this.showAlert(message, 'success');
+        this._showAlert(message, 'success');
     }
 
     showError(message) {
-        console.error("Mostrando mensaje de error:", message);
-        this.showAlert(message, 'danger');
+        this._showAlert(message, 'danger');
     }
 
-    showAlert(message, type) {
+    _showAlert(message, type) {
         const alertDiv = document.createElement('div');
         alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
         alertDiv.role = 'alert';
         alertDiv.innerHTML = `
             ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         `;
 
         const container = document.getElementById('alertsContainer') || document.body;
@@ -165,13 +171,9 @@ export default class DashboardView {
             this.currentUserElement.textContent = userInfo;
         }
     }
+}
 
-    setupSidebarToggle() {
-        const sidebarToggle = document.getElementById('sidebarCollapse');
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', () => {
-                document.getElementById('sidebar').classList.toggle('active');
-            });
-        }
-    }
+// Exportación para módulos (si es necesario)
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    module.exports = DashboardView;
 }
