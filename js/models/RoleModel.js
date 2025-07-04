@@ -1,25 +1,28 @@
 class RoleModel {
     constructor() {
-        this.roles = JSON.parse(localStorage.getItem('roles')) || [
+        this.STORAGE_KEY = 'gath_roles';
+        this.roles = JSON.parse(localStorage.getItem(this.STORAGE_KEY)) || [
             { id: 1, description: 'Administrador' },
             { id: 2, description: 'Usuario' },
             { id: 3, description: 'Reclutador' }
         ];
+        this._saveAll();
     }
-    
+
+    _saveAll() {
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.roles));
+    }
+
     getAllRoles() {
         return this.roles;
     }
-    
-    getRoleById(id) {
-        return this.roles.find(role => role.id === parseInt(id));
-    }
-    
+
     createRole(description) {
         const newId = this.roles.length > 0 ? Math.max(...this.roles.map(r => r.id)) + 1 : 1;
-        this.roles.push({ id: newId, description });
-        localStorage.setItem('roles', JSON.stringify(this.roles));
-        return newId;
+        const newRole = { id: newId, description };
+        this.roles.push(newRole);
+        this._saveAll();
+        return newRole;
     }
     
     updateRole(id, description) {

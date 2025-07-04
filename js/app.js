@@ -1,6 +1,4 @@
-// app.js modificado
 document.addEventListener('DOMContentLoaded', () => {
-    // Solo ejecutar en dashboard.html
     if (window.location.pathname.includes('dashboard.html')) {
         const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
         
@@ -10,8 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            console.log("Iniciando dashboard para:", currentUser.email);
-            
             const loadScript = (src) => {
                 return new Promise((resolve, reject) => {
                     const script = document.createElement('script');
@@ -24,21 +20,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
             Promise.all([
                 loadScript('js/models/UserModel.js'),
+                loadScript('js/models/RoleModel.js'),
+                loadScript('js/models/VacancyModel.js'),
+                loadScript('js/models/CategoryModel.js'),
+                loadScript('js/models/ProfessionModel.js'),
                 loadScript('js/views/DashboardView.js'),
-                loadScript('js/controllers/DashboardController.js')
+                loadScript('js/controllers/DashboardController.js'),
+                loadScript('js/controllers/RoleController.js'),
+                loadScript('js/controllers/VacancyController.js'),
+                loadScript('js/controllers/CategoryController.js'),
+                loadScript('js/controllers/ProfessionController.js')
             ]).then(() => {
-                const model = new UserModel();
                 const view = new DashboardView();
-                new DashboardController(view, model);
-            }).catch(error => {
-                console.error("Error al cargar scripts:", error);
-                alert("Error al cargar la aplicación. Recarga la página.");
+                
+                // Inicializar todos los controladores
+                new DashboardController(view, new UserModel());
+                new RoleController(view, new RoleModel());
+                
+                // Inicializar controladores de vacantes, categorías y profesiones
+                const categoryModel = new CategoryModel();
+                const professionModel = new ProfessionModel();
+                new VacancyController(
+                    view, 
+                    new VacancyModel(), 
+                    categoryModel, 
+                    professionModel
+                );
+                new CategoryController(view, categoryModel);
+                new ProfessionController(view, professionModel);
             });
-
         } catch (error) {
-            console.error("Error crítico:", error);
-            sessionStorage.removeItem('currentUser');
-            window.location.href = 'index.html';
+            console.error("Error:", error);
         }
     }
 });
