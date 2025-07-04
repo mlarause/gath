@@ -23,8 +23,7 @@ class AuthController {
         
         try {
             // Obtener datos del formulario
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const { email, password } = this.view.getLoginData();
 
             // Validaciones básicas
             if (!email || !password) {
@@ -44,12 +43,8 @@ class AuthController {
                     role: user.role
                 }));
 
-                // Redirección basada en el rol
-                if (user.role === 'admin') {
-                    window.location.href = 'dashboard.html';
-                } else {
-                    window.location.href = 'user-dashboard.html';
-                }
+                // Redirección a dashboard
+                window.location.href = 'dashboard.html';
             } else {
                 throw new Error('Credenciales incorrectas');
             }
@@ -64,15 +59,7 @@ class AuthController {
         
         try {
             // Obtener datos del formulario
-            const formData = {
-                documentNumber: document.getElementById('documentNumber').value,
-                firstName: document.getElementById('firstName').value,
-                lastName: document.getElementById('lastName').value,
-                email: document.getElementById('email').value,
-                password: document.getElementById('password').value,
-                confirmPassword: document.getElementById('confirmPassword').value,
-                role: 'user' // Rol por defecto
-            };
+            const formData = this.view.getRegisterData();
 
             // Validaciones
             if (formData.password !== formData.confirmPassword) {

@@ -1,4 +1,3 @@
-// UserModel.js - Versión funcional completa
 class UserModel {
     constructor() {
         this.STORAGE_KEY = 'gath_users_v2';
@@ -19,6 +18,12 @@ class UserModel {
             }];
             this._saveAll(defaultUsers);
         }
+    }
+
+    authenticate(email, password) {
+        const users = this.getAllUsers();
+        const user = users.find(u => u.email === email && u.password === password);
+        return user || null;
     }
 
     getAllUsers() {
