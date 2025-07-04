@@ -64,6 +64,7 @@
                                 <button id="addCategoryBtn" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Agregar Categoría</button>
                             </div>
                             <div class="card-body">
+                                <input type="text" id="searchCategory" class="form-control mb-2" placeholder="Buscar categoría...">
                                 <div class="table-responsive">
                                     <table class="table table-striped" id="categoriesTable">
                                         <thead>
@@ -303,6 +304,7 @@
                                 </button>
                             </div>
                             <div class="card-body">
+                                <input type="text" id="searchCategory" class="form-control mb-2" placeholder="Buscar categoría...">
                                 <div class="table-responsive">
                                     <table class="table table-striped" id="categoriesTable">
                                         <thead>
@@ -1009,8 +1011,14 @@ if (sectionName === 'documents') {
             `).join('');
         }
         
-        renderCategories() {
-    const categories = JSON.parse(localStorage.getItem('categories')) || [];
+        renderCategories(filter = '') {
+    let categories = JSON.parse(localStorage.getItem('categories')) || [];
+    if (filter) {
+        categories = categories.filter(c =>
+            c.nombre.toLowerCase().includes(filter.toLowerCase()) ||
+            c.descripcion.toLowerCase().includes(filter.toLowerCase())
+        );
+    }
     const tbody = document.querySelector('#categoriesTable tbody');
     if (!tbody) return;
     tbody.innerHTML = categories.map((c, i) => `
@@ -1181,6 +1189,126 @@ renderPostulations() {
                 this.renderVacancies();
             }
         }
+
+        showAddCategoryModal() {
+    document.getElementById('categoryName').value = '';
+    document.getElementById('categoryDescription').value = '';
+    const modal = new bootstrap.Modal(document.getElementById('categoryModal'));
+    modal.show();
+    document.getElementById('saveCategoryBtn').onclick = () => this.saveCategory();
+}
+
+saveCategory() {
+    const name = document.getElementById('categoryName').value.trim();
+    const desc = document.getElementById('categoryDescription').value.trim();
+    if (!name) return alert('El nombre es obligatorio');
+    let categories = JSON.parse(localStorage.getItem('categories')) || [];
+    categories.push({ nombre: name, descripcion: desc });
+    localStorage.setItem('categories', JSON.stringify(categories));
+    this.renderCategories();
+    bootstrap.Modal.getInstance(document.getElementById('categoryModal')).hide();
+}
+
+editCategory(index) {
+    const categories = JSON.parse(localStorage.getItem('categories')) || [];
+    const cat = categories[index];
+    document.getElementById('categoryName').value = cat.nombre;
+    document.getElementById('categoryDescription').value = cat.descripcion;
+    const modal = new bootstrap.Modal(document.getElementById('categoryModal'));
+    modal.show();
+    document.getElementById('saveCategoryBtn').onclick = () => {
+        cat.nombre = document.getElementById('categoryName').value.trim();
+        cat.descripcion = document.getElementById('categoryDescription').value.trim();
+        categories[index] = cat;
+        localStorage.setItem('categories', JSON.stringify(categories));
+        this.renderCategories();
+        modal.hide();
+        document.getElementById('saveCategoryBtn').onclick = () => this.saveCategory();
+    };
+}
+
+deleteCategory(index) {
+    if (confirm('¿Eliminar categoría?')) {
+        let categories = JSON.parse(localStorage.getItem('categories')) || [];
+        categories.splice(index, 1);
+        localStorage.setItem('categories', JSON.stringify(categories));
+        this.renderCategories();
+    }
+}
+
+showAddUserModal() {
+    // Limpia el formulario
+    document.getElementById('userForm').innerHTML = `
+        <div class="mb-3">
+            <label class="form-label">Documento</label>
+            <input type="text" class="form-control" id="userDocumento" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Nombre Completo</label>
+            <input type="text" class="form-control" id="userNombre" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" id="userEmail" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Rol</label>
+            <input type="text" class="form-control" id="userRol" required>
+        </div>
+    `;
+    document.getElementById('modalSave').onclick = () => this.saveUser();
+    const modal = new bootstrap.Modal(document.getElementById('userModal'));
+    modal.show();
+}
+
+saveUser(editIndex = null) {
+    const documento = document.getElementById('userDocumento').value.trim();
+    const nombre = document.getElementById('userNombre').value.trim();
+    const email = document.getElementById('userEmail').value.trim();
+    const rol = document.getElementById('userRol').value.trim();
+    if (!documento || !nombre || !email || !rol) {
+        alert('Todos los campos son obligatorios');
+        return;
+    }
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    if (editIndex !== null) {
+        // Editar usuario existente
+        users[editIndex] = { documento, nombre, email, rol };
+    } else {
+        // Agregar nuevo usuario
+        users.push({ documento, nombre, email, rol });
+    }
+    localStorage.setItem('users', JSON.stringify(users));
+    this.renderUsers();
+    bootstrap.Modal.getInstance(document.getElementById('userModal')).hide();
+}
+
+editUser(index) {
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const user = users[index];
+    document.getElementById('userForm').innerHTML = `
+        <div class="mb-3">
+            <label class="form-label">Documento</label>
+            <input type="text" class="form-control" id="userDocumento" value="${user.documento}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Nombre Completo</label>
+            <input type="text" class="form-control" id="userNombre" value="${user.nombre}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" id="userEmail" value="${user.email}" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Rol</label>
+            <input type="text" class="form-control" id="userRol" value="${user.rol}" required>
+        </div>
+    `;
+    document.getElementById('modalSave').onclick = () => this.saveUser(index);
+    const modal = new bootstrap.Modal(document.getElementById('userModal'));
+    modal.show();
+}
+
     }
 
     // Inicialización cuando el DOM esté listo
@@ -1216,7 +1344,13 @@ renderPostulations() {
             script.onerror = reject;
             document.body.appendChild(script);
         });
+
+        
+
+        
     }
+
+    
 </script>
 </body>
 </html>
