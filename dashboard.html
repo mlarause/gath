@@ -19,70 +19,15 @@
                 <h4 class="text-white">GATH DE COLSANITAS</h4>
             </div>
             <ul class="list-unstyled components">
-                <li>
-                    <a href="#homeSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                        <i class="bi bi-people-fill me-2"></i>Usuarios
-                    </a>
-                    <ul class="collapse list-unstyled" id="homeSubmenu">
-                        <li>
-                            <a href="#" data-section="users" class="menu-link"><i class="bi bi-person-lines-fill me-2"></i>Gestión Usuarios</a>
-                        </li>
-                        <li>
-                            <a href="#" data-section="roles" class="menu-link"><i class="bi bi-shield-lock me-2"></i>Roles</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#vacantesSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                        <i class="bi bi-briefcase-fill me-2"></i>Vacantes
-                    </a>
-                    <ul class="collapse list-unstyled" id="vacantesSubmenu">
-                        <li>
-                            <a href="#" data-section="vacancies" class="menu-link"><i class="bi bi-file-earmark-post me-2"></i>Gestión Vacantes</a>
-                        </li>
-                        <li>
-                            <a href="#" data-section="categories" class="menu-link"><i class="bi bi-tags-fill me-2"></i>Categorías</a>
-                        </li>
-                        <li>
-                            <a href="#" data-section="professions" class="menu-link"><i class="bi bi-mortarboard-fill me-2"></i>Profesiones</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#hojaVidaSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                        <i class="bi bi-file-earmark-person-fill me-2"></i>Hojas de Vida
-                    </a>
-                    <ul class="collapse list-unstyled" id="hojaVidaSubmenu">
-                        <li>
-                            <a href="#" data-section="resumes" class="menu-link"><i class="bi bi-file-text-fill me-2"></i>Gestión Hojas</a>
-                        </li>
-                        <li>
-                            <a href="#" data-section="experience" class="menu-link"><i class="bi bi-building me-2"></i>Experiencia Laboral</a>
-                        </li>
-                        <li>
-                            <a href="#" data-section="studies" class="menu-link"><i class="bi bi-book-fill me-2"></i>Estudios</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#documentosSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                        <i class="bi bi-folder-fill me-2"></i>Documentos
-                    </a>
-                    <ul class="collapse list-unstyled" id="documentosSubmenu">
-                        <li>
-                            <a href="#" data-section="vacations" class="menu-link"><i class="bi bi-airplane-fill me-2"></i>Vacaciones</a>
-                        </li>
-                        <li>
-                            <a href="#" data-section="peaceSafe" class="menu-link"><i class="bi bi-file-earmark-check-fill me-2"></i>Paz y Salvo</a>
-                        </li>
-                        <li>
-                            <a href="#" data-section="disability" class="menu-link"><i class="bi bi-file-earmark-medical-fill me-2"></i>Incapacidad</a>
-                        </li>
-                        <li>
-                            <a href="#" data-section="postulations" class="menu-link"><i class="bi bi-file-earmark-arrow-up-fill me-2"></i>Postulaciones</a>
-                        </li>
-                    </ul>
-                </li>
+                <li><a href="#" class="menu-link" data-section="users"><i class="bi bi-person-lines-fill me-2"></i>Gestión Usuarios</a></li>
+                <li><a href="#" class="menu-link" data-section="roles"><i class="bi bi-shield-lock me-2"></i>Gestión Roles</a></li>
+                <li><a href="#" class="menu-link" data-section="vacancies"><i class="bi bi-file-earmark-post me-2"></i>Gestión Vacantes</a></li>
+                <li><a href="#" class="menu-link" data-section="categories"><i class="bi bi-tags-fill me-2"></i>Categorías</a></li>
+                <li><a href="#" class="menu-link" data-section="professions"><i class="bi bi-mortarboard-fill me-2"></i>Profesiones</a></li>
+                <li><a href="#" class="menu-link" data-section="resumes"><i class="bi bi-file-text-fill me-2"></i>Gestión Hojas</a></li>
+                <li><a href="#" class="menu-link" data-section="experience"><i class="bi bi-building me-2"></i>Experiencia Laboral</a></li>
+                <li><a href="#" class="menu-link" data-section="studies"><i class="bi bi-book-fill me-2"></i>Estudios</a></li>
+                <li><a href="#" class="menu-link" data-section="documents"><i class="bi bi-folder-fill me-2"></i>Documentos</a></li>
             </ul>
         </nav>
 
@@ -109,6 +54,154 @@
                     <div class="jumbotron bg-light p-5 rounded" id="welcomeContent">
                         <h1 class="display-4">Bienvenido al Dashboard</h1>
                         <p class="lead">Seleccione una opción del menú lateral para comenzar.</p>
+                    </div>
+
+                    <!-- Sección de Gestión de Categorías -->
+                    <div id="categoriesSection" class="content-section">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5>Gestión de Categorías</h5>
+                                <button id="addCategoryBtn" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Agregar Categoría</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="categoriesTable">
+                                        <thead>
+                                            <tr><th>Nombre</th><th>Descripción</th><th>Acciones</th></tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección de Gestión de Profesiones -->
+                    <div id="professionsSection" class="content-section">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5>Gestión de Profesiones</h5>
+                                <button id="addProfessionBtn" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Agregar Profesión</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="professionsTable">
+                                        <thead>
+                                            <tr><th>Nombre</th><th>Descripción</th><th>Acciones</th></tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección de Gestión de Hojas de Vida -->
+                    <div id="resumesSection" class="content-section">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5>Gestión de Hojas de Vida</h5>
+                                <button id="addResumeBtn" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Agregar Hoja</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="resumesTable">
+                                        <thead>
+                                            <tr><th>Nombre</th><th>Documento</th><th>Email</th><th>Acciones</th></tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección de Experiencia Laboral -->
+                    <div id="experienceSection" class="content-section">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5>Experiencia Laboral</h5>
+                                <button id="addExperienceBtn" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Agregar Experiencia</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="experienceTable">
+                                        <thead>
+                                            <tr><th>Empresa</th><th>Cargo</th><th>Fecha Inicio</th><th>Fecha Fin</th><th>Acciones</th></tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección de Estudios -->
+                    <div id="studiesSection" class="content-section">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5>Estudios</h5>
+                                <button id="addStudyBtn" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Agregar Estudio</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="studiesTable">
+                                        <thead>
+                                            <tr><th>Institución</th><th>Título</th><th>Fecha Inicio</th><th>Fecha Fin</th><th>Acciones</th></tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección de Documentos -->
+                    <div id="documentsSection" class="content-section">
+                        <div class="card mb-3">
+                            <div class="card-header"><h5>Vacaciones</h5></div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="vacationsTable">
+                                        <thead><tr><th>Empleado</th><th>Fecha Inicio</th><th>Fecha Fin</th><th>Acciones</th></tr></thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-3">
+                            <div class="card-header"><h5>Paz y Salvo</h5></div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="peaceSafeTable">
+                                        <thead><tr><th>Empleado</th><th>Fecha</th><th>Acciones</th></tr></thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-3">
+                            <div class="card-header"><h5>Incapacidad</h5></div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="disabilityTable">
+                                        <thead><tr><th>Empleado</th><th>Fecha Inicio</th><th>Fecha Fin</th><th>Acciones</th></tr></thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-3">
+                            <div class="card-header"><h5>Postulaciones</h5></div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="postulationsTable">
+                                        <thead><tr><th>Empleado</th><th>Vacante</th><th>Acciones</th></tr></thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Sección de Gestión de Usuarios -->
@@ -648,65 +741,482 @@
     </div>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Ocultar todas las secciones de contenido excepto la de bienvenida
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.style.display = 'none';
-            });
-            document.getElementById('welcomeContent').style.display = 'block';
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Sistema centralizado de gestión de secciones
+    class DashboardManager {
+        constructor() {
+            this.currentSection = null;
+            this.init();
+        }
 
-            // Manejar clics en los enlaces del menú
-            document.querySelectorAll('.menu-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const sectionId = this.getAttribute('data-section') + 'Section';
-                    
-                    // Ocultar todo el contenido
-                    document.getElementById('welcomeContent').style.display = 'none';
-                    document.querySelectorAll('.content-section').forEach(section => {
-                        section.style.display = 'none';
-                    });
+        init() {
+            // 1. Cargar datos de ejemplo si no existen
+            this.initSampleData();
 
-                    // Mostrar la sección seleccionada
-                    const sectionToShow = document.getElementById(sectionId);
-                    if(sectionToShow) {
-                        sectionToShow.style.display = 'block';
-                    }
-                });
-            });
+            // 2. Configuración inicial
+            this.hideAllSections();
+            this.showWelcome();
 
-            // Manejar el colapso del sidebar
-            document.getElementById('sidebarCollapse').addEventListener('click', function() {
+            // 3. Eventos del menú
+            this.setupMenuEvents();
+
+            // 4. Sidebar collapse
+            document.getElementById('sidebarCollapse').addEventListener('click', () => {
                 document.getElementById('sidebar').classList.toggle('active');
             });
 
-            // Aquí puedes inicializar los controladores según el rol del usuario
-            // Por ejemplo:
-            // if (usuarioTienePermiso('gestion_usuarios')) {
-            //     inicializarUserController();
-            // }
-        });
+            // 5. Cargar usuario
+            this.loadCurrentUser();
 
-        // Función para cargar el nombre del usuario actual
-        function loadCurrentUser() {
-            // Aquí iría la lógica para cargar el nombre del usuario desde la sesión
-            document.getElementById('currentUser').textContent = "Usuario Actual";
+            // 6. Cargar datos iniciales en tablas
+            this.renderUsers();
+this.renderRoles();
+this.renderVacancies();
+this.renderCategories();
+this.renderProfessions();
+this.renderResumes();
+this.renderExperience();
+this.renderStudies();
+this.renderVacations();
+this.renderPeaceSafe();
+this.renderDisability();
+this.renderPostulations();
         }
 
-        // Llamar a la función cuando se carga la página
-        loadCurrentUser();
-    </script>
+        initSampleData() {
+            // Usuarios
+            if (!localStorage.getItem('users')) {
+                const users = [
+                    { documento: '1001', nombre: 'Juan Pérez', email: 'juan@example.com', rol: 'Administrador' },
+                    { documento: '1002', nombre: 'Ana Gómez', email: 'ana@example.com', rol: 'Usuario' }
+                ];
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+            // Roles
+            if (!localStorage.getItem('roles')) {
+                const roles = [
+                    { id: 1, nombre: 'Administrador' },
+                    { id: 2, nombre: 'Usuario' }
+                ];
+                localStorage.setItem('roles', JSON.stringify(roles));
+            }
+            // Vacantes
+            if (!localStorage.getItem('vacancies')) {
+                const vacancies = [
+                    { titulo: 'Desarrollador Web', descripcion: 'Frontend y Backend', categoria: 'TI', profesion: 'Ingeniero', estado: 'Abierta' },
+                    { titulo: 'Analista QA', descripcion: 'Pruebas de software', categoria: 'TI', profesion: 'Analista', estado: 'Cerrada' }
+                ];
+                localStorage.setItem('vacancies', JSON.stringify(vacancies));
+            }
+            if (!localStorage.getItem('categories')) {
+    const categories = [
+        { nombre: 'Administrativa', descripcion: 'Área administrativa' },
+        { nombre: 'Técnica', descripcion: 'Área técnica' }
+    ];
+    localStorage.setItem('categories', JSON.stringify(categories));
+}
+// Profesiones
+if (!localStorage.getItem('professions')) {
+    const professions = [
+        { nombre: 'Ingeniero', descripcion: 'Ingeniería en sistemas' },
+        { nombre: 'Contador', descripcion: 'Contaduría pública' }
+    ];
+    localStorage.setItem('professions', JSON.stringify(professions));
+}
+// Hojas de vida
+if (!localStorage.getItem('resumes')) {
+    const resumes = [
+        { nombre: 'Carlos Ruiz', documento: '12345', email: 'carlos@correo.com' },
+        { nombre: 'Laura Torres', documento: '67890', email: 'laura@correo.com' }
+    ];
+    localStorage.setItem('resumes', JSON.stringify(resumes));
+}
+// Experiencia laboral
+if (!localStorage.getItem('experience')) {
+    const experience = [
+        { empresa: 'Empresa X', cargo: 'Desarrollador', inicio: '2022-01-01', fin: '2023-01-01' },
+        { empresa: 'Empresa Y', cargo: 'Analista', inicio: '2021-01-01', fin: '2022-01-01' }
+    ];
+    localStorage.setItem('experience', JSON.stringify(experience));
+}
+// Estudios
+if (!localStorage.getItem('studies')) {
+    const studies = [
+        { institucion: 'Universidad A', titulo: 'Ingeniería', inicio: '2018-01-01', fin: '2022-01-01' },
+        { institucion: 'Universidad B', titulo: 'Contaduría', inicio: '2017-01-01', fin: '2021-01-01' }
+    ];
+    localStorage.setItem('studies', JSON.stringify(studies));
+}
+// Vacaciones
+if (!localStorage.getItem('vacations')) {
+    const vacations = [
+        { empleado: 'Carlos Ruiz', inicio: '2024-06-01', fin: '2024-06-15' }
+    ];
+    localStorage.setItem('vacations', JSON.stringify(vacations));
+}
+// Paz y Salvo
+if (!localStorage.getItem('peaceSafe')) {
+    const peaceSafe = [
+        { empleado: 'Laura Torres', fecha: '2024-05-20' }
+    ];
+    localStorage.setItem('peaceSafe', JSON.stringify(peaceSafe));
+}
+// Incapacidad
+if (!localStorage.getItem('disability')) {
+    const disability = [
+        { empleado: 'Carlos Ruiz', inicio: '2024-04-01', fin: '2024-04-10' }
+    ];
+    localStorage.setItem('disability', JSON.stringify(disability));
+}
+// Postulaciones
+if (!localStorage.getItem('postulations')) {
+    const postulations = [
+        { empleado: 'Laura Torres', vacante: 'Desarrollador Web' }
+    ];
+    localStorage.setItem('postulations', JSON.stringify(postulations));
+}
+        }
 
-    <!-- Incluir los controladores -->
-    <script src="js/controllers/DashboardController.js"></script>
-    <script src="js/controllers/RoleController.js"></script>
-    <script src="js/controllers/VacancyController.js"></script>
-    <script src="js/controllers/CategoryController.js"></script>
-    <script src="js/controllers/ProfessionController.js"></script>
-    <script src="js/controllers/ResumeController.js"></script>
-    <script src="js/controllers/ExperienceController.js"></script>
-    <script src="js/controllers/StudyController.js"></script>
+        hideAllSections() {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+            });
+        }
+
+        showWelcome() {
+            document.getElementById('welcomeContent').style.display = 'block';
+        }
+
+        setupMenuEvents() {
+            document.querySelectorAll('.menu-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = e.target.getAttribute('data-section');
+                    this.loadSection(section);
+                });
+            });
+        }
+
+        loadSection(sectionName) {
+            // 1. Ocultar contenido actual
+            this.hideAllSections();
+            document.getElementById('welcomeContent').style.display = 'none';
+
+            // 2. Mostrar nueva sección
+            const sectionElement = document.getElementById(`${sectionName}Section`);
+            if (sectionElement) {
+                sectionElement.style.display = 'block';
+                this.currentSection = sectionName;
+
+                // 3. Disparar evento para cargar datos
+                this.dispatchSectionEvent(sectionName);
+
+                // 4. Renderizar datos según sección
+                if (sectionName === 'users') this.renderUsers();
+if (sectionName === 'roles') this.renderRoles();
+if (sectionName === 'vacancies') this.renderVacancies();
+if (sectionName === 'categories') this.renderCategories();
+if (sectionName === 'professions') this.renderProfessions();
+if (sectionName === 'resumes') this.renderResumes();
+if (sectionName === 'experience') this.renderExperience();
+if (sectionName === 'studies') this.renderStudies();
+if (sectionName === 'documents') {
+    this.renderVacations();
+    this.renderPeaceSafe();
+    this.renderDisability();
+    this.renderPostulations();
+}
+
+                console.log(`Sección cargada: ${sectionName}`);
+            } else {
+                console.error(`Sección no encontrada: ${sectionName}`);
+                this.showWelcome();
+            }
+        }
+
+        dispatchSectionEvent(sectionName) {
+            const event = new CustomEvent('dashboardSectionChange', {
+                detail: {
+                    section: sectionName,
+                    timestamp: new Date()
+                }
+            });
+            document.dispatchEvent(event);
+        }
+
+        loadCurrentUser() {
+            try {
+                const userData = JSON.parse(localStorage.getItem('currentUser')) || { name: 'Usuario', role: 'Invitado' };
+                document.getElementById('currentUser').textContent = userData.name;
+            } catch (error) {
+                console.error('Error al cargar usuario:', error);
+                document.getElementById('currentUser').textContent = 'Usuario';
+            }
+        }
+
+        // Renderizado de tablas con datos de ejemplo
+        renderUsers() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const tbody = document.querySelector('#usersTable tbody');
+            if (!tbody) return;
+            tbody.innerHTML = users.map((u, i) => `
+                <tr>
+                    <td>${u.documento}</td>
+                    <td>${u.nombre}</td>
+                    <td>${u.email}</td>
+                    <td>${u.rol}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="dashboardManager.editUser(${i})">Editar</button>
+                        <button class="btn btn-sm btn-danger" onclick="dashboardManager.deleteUser(${i})">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        renderRoles() {
+            const roles = JSON.parse(localStorage.getItem('roles')) || [];
+            const tbody = document.querySelector('#rolesTable tbody');
+            if (!tbody) return;
+            tbody.innerHTML = roles.map((r, i) => `
+                <tr>
+                    <td>${r.id}</td>
+                    <td>${r.nombre}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="dashboardManager.editRole(${i})">Editar</button>
+                        <button class="btn btn-sm btn-danger" onclick="dashboardManager.deleteRole(${i})">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        renderVacancies() {
+            const vacancies = JSON.parse(localStorage.getItem('vacancies')) || [];
+            const tbody = document.querySelector('#vacanciesTable tbody');
+            if (!tbody) return;
+            tbody.innerHTML = vacancies.map((v, i) => `
+                <tr>
+                    <td>${v.titulo}</td>
+                    <td>${v.descripcion}</td>
+                    <td>${v.categoria}</td>
+                    <td>${v.profesion}</td>
+                    <td>${v.estado}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="dashboardManager.editVacancy(${i})">Editar</button>
+                        <button class="btn btn-sm btn-danger" onclick="dashboardManager.deleteVacancy(${i})">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        renderCategories() {
+    const categories = JSON.parse(localStorage.getItem('categories')) || [];
+    const tbody = document.querySelector('#categoriesTable tbody');
+    if (!tbody) return;
+    tbody.innerHTML = categories.map((c, i) => `
+        <tr>
+            <td>${c.nombre}</td>
+            <td>${c.descripcion}</td>
+            <td>
+                <button class='btn btn-sm btn-warning' onclick='dashboardManager.editCategory(${i})'>Editar</button>
+                <button class='btn btn-sm btn-danger' onclick='dashboardManager.deleteCategory(${i})'>Eliminar</button>
+            </td>
+        </tr>
+    `).join('');
+}
+renderProfessions() {
+    const professions = JSON.parse(localStorage.getItem('professions')) || [];
+    const tbody = document.querySelector('#professionsTable tbody');
+    if (!tbody) return;
+    tbody.innerHTML = professions.map((p, i) => `
+        <tr>
+            <td>${p.nombre}</td>
+            <td>${p.descripcion}</td>
+            <td>
+                <button class='btn btn-sm btn-warning' onclick='dashboardManager.editProfession(${i})'>Editar</button>
+                <button class='btn btn-sm btn-danger' onclick='dashboardManager.deleteProfession(${i})'>Eliminar</button>
+            </td>
+        </tr>
+    `).join('');
+}
+renderResumes() {
+    const resumes = JSON.parse(localStorage.getItem('resumes')) || [];
+    const tbody = document.querySelector('#resumesTable tbody');
+    if (!tbody) return;
+    tbody.innerHTML = resumes.map((r, i) => `
+        <tr>
+            <td>${r.nombre}</td>
+            <td>${r.documento}</td>
+            <td>${r.email}</td>
+            <td>
+                <button class='btn btn-sm btn-warning' onclick='dashboardManager.editResume(${i})'>Editar</button>
+                <button class='btn btn-sm btn-danger' onclick='dashboardManager.deleteResume(${i})'>Eliminar</button>
+            </td>
+        </tr>
+    `).join('');
+}
+renderExperience() {
+    const experience = JSON.parse(localStorage.getItem('experience')) || [];
+    const tbody = document.querySelector('#experienceTable tbody');
+    if (!tbody) return;
+    tbody.innerHTML = experience.map((e, i) => `
+        <tr>
+            <td>${e.empresa}</td>
+            <td>${e.cargo}</td>
+            <td>${e.inicio}</td>
+            <td>${e.fin}</td>
+            <td>
+                <button class='btn btn-sm btn-warning' onclick='dashboardManager.editExperience(${i})'>Editar</button>
+                <button class='btn btn-sm btn-danger' onclick='dashboardManager.deleteExperience(${i})'>Eliminar</button>
+            </td>
+        </tr>
+    `).join('');
+}
+renderStudies() {
+    const studies = JSON.parse(localStorage.getItem('studies')) || [];
+    const tbody = document.querySelector('#studiesTable tbody');
+    if (!tbody) return;
+    tbody.innerHTML = studies.map((s, i) => `
+        <tr>
+            <td>${s.institucion}</td>
+            <td>${s.titulo}</td>
+            <td>${s.inicio}</td>
+            <td>${s.fin}</td>
+            <td>
+                <button class='btn btn-sm btn-warning' onclick='dashboardManager.editStudy(${i})'>Editar</button>
+                <button class='btn btn-sm btn-danger' onclick='dashboardManager.deleteStudy(${i})'>Eliminar</button>
+            </td>
+        </tr>
+    `).join('');
+}
+renderVacations() {
+    const vacations = JSON.parse(localStorage.getItem('vacations')) || [];
+    const tbody = document.querySelector('#vacationsTable tbody');
+    if (!tbody) return;
+    tbody.innerHTML = vacations.map((v, i) => `
+        <tr>
+            <td>${v.empleado}</td>
+            <td>${v.inicio}</td>
+            <td>${v.fin}</td>
+            <td>
+                <button class='btn btn-sm btn-warning' onclick='dashboardManager.editVacation(${i})'>Editar</button>
+                <button class='btn btn-sm btn-danger' onclick='dashboardManager.deleteVacation(${i})'>Eliminar</button>
+            </td>
+        </tr>
+    `).join('');
+}
+renderPeaceSafe() {
+    const peaceSafe = JSON.parse(localStorage.getItem('peaceSafe')) || [];
+    const tbody = document.querySelector('#peaceSafeTable tbody');
+    if (!tbody) return;
+    tbody.innerHTML = peaceSafe.map((p, i) => `
+        <tr>
+            <td>${p.empleado}</td>
+            <td>${p.fecha}</td>
+            <td>
+                <button class='btn btn-sm btn-warning' onclick='dashboardManager.editPeaceSafe(${i})'>Editar</button>
+                <button class='btn btn-sm btn-danger' onclick='dashboardManager.deletePeaceSafe(${i})'>Eliminar</button>
+            </td>
+        </tr>
+    `).join('');
+}
+renderDisability() {
+    const disability = JSON.parse(localStorage.getItem('disability')) || [];
+    const tbody = document.querySelector('#disabilityTable tbody');
+    if (!tbody) return;
+    tbody.innerHTML = disability.map((d, i) => `
+        <tr>
+            <td>${d.empleado}</td>
+            <td>${d.inicio}</td>
+            <td>${d.fin}</td>
+            <td>
+                <button class='btn btn-sm btn-warning' onclick='dashboardManager.editDisability(${i})'>Editar</button>
+                <button class='btn btn-sm btn-danger' onclick='dashboardManager.deleteDisability(${i})'>Eliminar</button>
+            </td>
+        </tr>
+    `).join('');
+}
+renderPostulations() {
+    const postulations = JSON.parse(localStorage.getItem('postulations')) || [];
+    const tbody = document.querySelector('#postulationsTable tbody');
+    if (!tbody) return;
+    tbody.innerHTML = postulations.map((p, i) => `
+        <tr>
+            <td>${p.empleado}</td>
+            <td>${p.vacante}</td>
+            <td>
+                <button class='btn btn-sm btn-warning' onclick='dashboardManager.editPostulation(${i})'>Editar</button>
+                <button class='btn btn-sm btn-danger' onclick='dashboardManager.deletePostulation(${i})'>Eliminar</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+
+        // Métodos simulados para editar/eliminar (solo ejemplo)
+        editUser(index) { alert('Editar usuario ' + index); }
+        deleteUser(index) {
+            if (confirm('¿Eliminar usuario?')) {
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                users.splice(index, 1);
+                localStorage.setItem('users', JSON.stringify(users));
+                this.renderUsers();
+            }
+        }
+        editRole(index) { alert('Editar rol ' + index); }
+        deleteRole(index) {
+            if (confirm('¿Eliminar rol?')) {
+                const roles = JSON.parse(localStorage.getItem('roles')) || [];
+                roles.splice(index, 1);
+                localStorage.setItem('roles', JSON.stringify(roles));
+                this.renderRoles();
+            }
+        }
+        editVacancy(index) { alert('Editar vacante ' + index); }
+        deleteVacancy(index) {
+            if (confirm('¿Eliminar vacante?')) {
+                const vacancies = JSON.parse(localStorage.getItem('vacancies')) || [];
+                vacancies.splice(index, 1);
+                localStorage.setItem('vacancies', JSON.stringify(vacancies));
+                this.renderVacancies();
+            }
+        }
+    }
+
+    // Inicialización cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Iniciar el gestor del dashboard
+        window.dashboardManager = new DashboardManager();
+        
+        // 2. Cargar controladores específicos
+        const controllerPromises = [
+            'js/controllers/DashboardController.js',
+            'js/controllers/UserController.js',
+            'js/controllers/RoleController.js',
+            'js/controllers/VacancyController.js',
+            'js/controllers/CategoryController.js',
+            'js/controllers/ProfessionController.js',
+            'js/controllers/ResumeController.js',
+            'js/controllers/ExperienceController.js',
+            'js/controllers/StudyController.js'
+        ].map(loadController);
+
+        // 3. Manejar errores de carga
+        Promise.all(controllerPromises)
+            .then(() => console.log('Todos los controladores cargados'))
+            .catch(err => console.error('Error cargando controladores:', err));
+    });
+
+    // Función para cargar controladores dinámicamente
+    function loadController(src) {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.body.appendChild(script);
+        });
+    }
+</script>
 </body>
 </html>
