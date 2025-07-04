@@ -1,78 +1,53 @@
+// DashboardView.js - Versión funcional completa
 class DashboardView {
     constructor() {
-        console.log("Inicializando DashboardView");
-        
-        // Inicialización segura del modal
-        this.modal = this._initModal();
-        this.currentUserElement = document.getElementById('currentUser');
-        this.alertsContainer = document.getElementById('alertsContainer') || document.body;
+        this.modal = new bootstrap.Modal(document.getElementById('userModal'));
+        this.alertsContainer = document.getElementById('alertsContainer');
     }
 
-    _initModal() {
-        const modalElement = document.getElementById('userModal');
-        if (!modalElement) {
-            console.error("Modal no encontrado");
-            return {
-                show: () => console.warn("Modal no disponible"),
-                hide: () => console.warn("Modal no disponible")
-            };
-        }
-        return new bootstrap.Modal(modalElement);
-    }
+    showUsers(users) {
+        const tbody = document.querySelector('#usersTable tbody');
+        if (!tbody) return;
 
-    displayUsers(users) {
-        try {
-            const tableBody = document.querySelector('#usersTable tbody');
-            if (!tableBody) throw new Error("Tabla de usuarios no encontrada");
-
-            tableBody.innerHTML = users.map(user => `
-                <tr>
-                    <td>${user.documentNumber}</td>
-                    <td>${user.firstName} ${user.lastName}</td>
-                    <td>${user.email}</td>
-                    <td>${user.role}</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary edit-user" data-id="${user.id}">
-                            <i class="bi bi-pencil-square"></i> Editar
-                        </button>
-                        <button class="btn btn-sm btn-danger delete-user" data-id="${user.id}">
-                            <i class="bi bi-trash"></i> Eliminar
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        } catch (error) {
-            console.error("Error al mostrar usuarios:", error);
-            this.showError("Error al cargar usuarios");
-        }
+        tbody.innerHTML = users.map(user => `
+            <tr>
+                <td>${this._escape(user.documentNumber)}</td>
+                <td>${this._escape(user.firstName)} ${this._escape(user.lastName)}</td>
+                <td>${this._escape(user.email)}</td>
+                <td>${this._escape(user.role)}</td>
+                <td>
+                    <button class="btn btn-sm btn-primary edit-user" data-id="${user.id}">
+                        <i class="bi bi-pencil"></i> Editar
+                    </button>
+                    <button class="btn btn-sm btn-danger delete-user" data-id="${user.id}">
+                        <i class="bi bi-trash"></i> Eliminar
+                    </button>
+                </td>
+            </tr>
+        `).join('');
     }
 
     showUserForm(user = null) {
-        const modalTitle = document.getElementById('userModalLabel');
+        const title = document.getElementById('userModalLabel');
         const form = document.getElementById('userForm');
         
-        if (!modalTitle || !form) {
-            console.error("Elementos del modal no encontrados");
-            return;
-        }
-
-        modalTitle.textContent = user ? 'Editar Usuario' : 'Nuevo Usuario';
-        form.innerHTML = user ? this._getEditFormHTML(user) : this._getAddFormHTML();
+        title.textContent = user ? 'Editar Usuario' : 'Nuevo Usuario';
+        form.innerHTML = user ? this._getEditForm(user) : this._getAddForm();
         this.modal.show();
     }
 
-    _getAddFormHTML() {
+    _getAddForm() {
         return `
             <div class="mb-3">
                 <label class="form-label">Documento</label>
                 <input type="text" class="form-control" name="documentNumber" required>
             </div>
             <div class="mb-3">
-                <label class="form-label">Nombre</label>
+                <label class="form-label">Nombres</label>
                 <input type="text" class="form-control" name="firstName" required>
             </div>
             <div class="mb-3">
-                <label class="form-label">Apellido</label>
+                <label class="form-label">Apellidos</label>
                 <input type="text" class="form-control" name="lastName" required>
             </div>
             <div class="mb-3">
@@ -93,33 +68,33 @@ class DashboardView {
         `;
     }
 
-    _getEditFormHTML(user) {
+    _getEditForm(user) {
         return `
             <input type="hidden" name="id" value="${user.id}">
             <div class="mb-3">
                 <label class="form-label">Documento</label>
                 <input type="text" class="form-control" name="documentNumber" 
-                       value="${user.documentNumber}" readonly>
+                       value="${this._escape(user.documentNumber)}" readonly>
             </div>
             <div class="mb-3">
-                <label class="form-label">Nombre</label>
+                <label class="form-label">Nombres</label>
                 <input type="text" class="form-control" name="firstName" 
-                       value="${user.firstName}" required>
+                       value="${this._escape(user.firstName)}" required>
             </div>
             <div class="mb-3">
-                <label class="form-label">Apellido</label>
+                <label class="form-label">Apellidos</label>
                 <input type="text" class="form-control" name="lastName" 
-                       value="${user.lastName}" required>
+                       value="${this._escape(user.lastName)}" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Correo</label>
                 <input type="email" class="form-control" name="email" 
-                       value="${user.email}" required>
+                       value="${this._escape(user.email)}" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Contraseña</label>
                 <input type="password" class="form-control" name="password" 
-                       placeholder="Dejar en blanco para no cambiar">
+                       placeholder="Dejar vacío para no cambiar">
             </div>
             <div class="mb-3">
                 <label class="form-label">Rol</label>
@@ -144,18 +119,20 @@ class DashboardView {
     }
 
     _showAlert(message, type) {
-        const alert = `
-            <div class="alert alert-${type} alert-dismissible fade show">
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type} alert-dismissible fade show`;
+        alert.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         `;
-        this.alertsContainer.insertAdjacentHTML('afterbegin', alert);
+        this.alertsContainer.prepend(alert);
+        setTimeout(() => alert.remove(), 5000);
     }
 
-    showCurrentUser(name) {
-        if (this.currentUserElement) {
-            this.currentUserElement.textContent = name;
-        }
+    _escape(text) {
+        return text ? text.toString()
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;') : '';
     }
 }
