@@ -253,18 +253,115 @@
                         </div>
                     </div>
 
-                    <!-- Otras secciones -->
+                    <!-- Sección de Hoja de Vida -->
                     <div id="resumesSection" class="content-section" style="display:none;">
                         <div class="card">
                             <div class="card-header">
-                                <h5>Gestión de Hojas de Vida</h5>
+                                <h5>Mi Hoja de Vida</h5>
                             </div>
                             <div class="card-body">
-                                <p>Contenido de gestión de hojas de vida aparecerá aquí.</p>
+                                <form id="resumeForm">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="text-center mb-3">
+                                                <img id="resumePhotoPreview" src="#" alt="Foto" class="img-thumbnail mb-2" style="display: none; max-width: 200px;">
+                                                <input type="file" id="resumePhoto" accept="image/*" class="form-control d-none">
+                                                <label for="resumePhoto" class="btn btn-outline-primary w-100">
+                                                    <i class="bi bi-camera"></i> Subir Foto
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <h5 class="mb-3">Información Personal</h5>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Primer Nombre</label>
+                                                    <input type="text" class="form-control" name="firstName" required>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Apellidos</label>
+                                                    <input type="text" class="form-control" name="lastName" required>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label">Tipo Documento</label>
+                                                    <select class="form-select" name="documentType" required>
+                                                        <option value="CC">Cédula</option>
+                                                        <option value="TI">Tarjeta Identidad</option>
+                                                        <option value="CE">Cédula Extranjería</option>
+                                                        <option value="PA">Pasaporte</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label">Número Documento</label>
+                                                    <input type="text" class="form-control" name="documentNumber" required>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label">Fecha Nacimiento</label>
+                                                    <input type="date" class="form-control" name="birthDate">
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label">Género</label>
+                                                    <select class="form-select" name="gender">
+                                                        <option value="masculino">Masculino</option>
+                                                        <option value="femenino">Femenino</option>
+                                                        <option value="otro">Otro</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Dirección</label>
+                                                    <input type="text" class="form-control" name="address">
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label">Teléfono</label>
+                                                    <input type="tel" class="form-control" name="phone">
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="form-label">Email</label>
+                                                    <input type="email" class="form-control" name="email" required>
+                                                </div>
+                                            </div>
+                                            <button type="button" id="saveResumeBtn" class="btn btn-primary">
+                                                <i class="bi bi-save"></i> Guardar Información
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <hr class="my-4">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h5>Experiencia Laboral</h5>
+                                            <button id="addExperienceBtn" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-plus-circle"></i> Agregar
+                                            </button>
+                                        </div>
+                                        <div id="experiencesContainer">
+                                            <!-- Las experiencias se cargarán aquí dinámicamente -->
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h5>Estudios</h5>
+                                            <button id="addStudyBtn" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-plus-circle"></i> Agregar
+                                            </button>
+                                        </div>
+                                        <div id="studiesContainer">
+                                            <!-- Los estudios se cargarán aquí dinámicamente -->
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    
+
+                    <!-- Otras secciones -->
                     <div id="experienceSection" class="content-section" style="display:none;">
                         <div class="card">
                             <div class="card-header">
@@ -455,6 +552,98 @@
         </div>
     </div>
 
+    <!-- Modal para Experiencia Laboral -->
+    <div class="modal fade" id="experienceModal" tabindex="-1" aria-labelledby="experienceModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="experienceModalLabel">Nueva Experiencia</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="experienceForm">
+                        <div class="mb-3">
+                            <label class="form-label">Empresa</label>
+                            <input type="text" class="form-control" name="company" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Cargo</label>
+                            <input type="text" class="form-control" name="position" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Fecha Inicio</label>
+                                <input type="date" class="form-control" name="startDate" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Fecha Fin</label>
+                                <input type="date" class="form-control" name="endDate">
+                            </div>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" name="currentJob">
+                            <label class="form-check-label">Trabajo Actual</label>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Descripción</label>
+                            <textarea class="form-control" name="description" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="saveExperienceBtn">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Estudios -->
+    <div class="modal fade" id="studyModal" tabindex="-1" aria-labelledby="studyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="studyModalLabel">Nuevo Estudio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="studyForm">
+                        <div class="mb-3">
+                            <label class="form-label">Institución</label>
+                            <input type="text" class="form-control" name="institution" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Título Obtenido</label>
+                            <input type="text" class="form-control" name="title" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Fecha Inicio</label>
+                                <input type="date" class="form-control" name="startDate" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Fecha Fin</label>
+                                <input type="date" class="form-control" name="endDate">
+                            </div>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" name="completed">
+                            <label class="form-check-label">Estudio Completo</label>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Descripción</label>
+                            <textarea class="form-control" name="description" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="saveStudyBtn">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/models/UserModel.js"></script>
@@ -475,6 +664,9 @@
     <script src="js/controllers/VacancyController.js"></script>
     <script src="js/controllers/CategoryController.js"></script>
     <script src="js/controllers/ProfessionController.js"></script>
+    <script src="js/controllers/ResumeController.js"></script>
+    <script src="js/controllers/ExperienceController.js"></script>
+    <script src="js/controllers/StudyController.js"></script>
     <script src="js/app.js"></script>
 
     <script>
