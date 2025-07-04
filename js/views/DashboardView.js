@@ -2,12 +2,10 @@ class DashboardView {
     constructor() {
         console.log("Inicializando DashboardView");
         
-        // Inicialización segura de elementos del DOM
         this.modal = this._initModal();
         this.currentUserElement = document.getElementById('currentUser');
         this.alertsContainer = document.getElementById('alertsContainer') || this._createAlertsContainer();
         
-        // Mostrar usuario actual
         this._showCurrentUser();
     }
 
@@ -50,7 +48,6 @@ class DashboardView {
             if (!tableBody) throw new Error("Tabla de usuarios no encontrada");
 
             tableBody.innerHTML = users.map(user => this._createUserRow(user)).join('');
-            console.log(`${users.length} usuarios mostrados correctamente`);
         } catch (error) {
             console.error("Error al mostrar usuarios:", error);
             this.showError("No se pudieron cargar los usuarios");

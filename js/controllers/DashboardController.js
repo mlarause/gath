@@ -12,7 +12,6 @@ class DashboardController {
     }
 
     _bindEvents() {
-        // Delegación de eventos para elementos dinámicos
         document.addEventListener('click', (e) => {
             if (e.target.closest('#addUserBtn')) {
                 this._showUserForm();
@@ -56,11 +55,11 @@ class DashboardController {
 
     async _saveUser() {
         try {
-            const form = document.getElementById(this.currentEditingId ? 'editUserForm' : 'addUserForm');
+            const form = document.getElementById('userForm');
             const formData = new FormData(form);
             
             const userData = {
-                id: this.currentEditingId || Date.now().toString(),
+                id: this.currentEditingId || 'user_' + Date.now(),
                 documentNumber: formData.get('documentNumber'),
                 firstName: formData.get('firstName'),
                 lastName: formData.get('lastName'),
@@ -73,11 +72,11 @@ class DashboardController {
 
             if (this.currentEditingId) {
                 await this.model.updateUser(userData);
-                this.view.showSuccess("Usuario actualizado");
+                this.view.showSuccess("Usuario actualizado correctamente");
             } else {
                 if (!password) throw new Error("La contraseña es requerida");
                 await this.model.createUser(userData);
-                this.view.showSuccess("Usuario creado");
+                this.view.showSuccess("Usuario creado correctamente");
             }
 
             this.view.hideModal();
@@ -89,11 +88,11 @@ class DashboardController {
     }
 
     async _deleteUser(id) {
-        if (!confirm("¿Eliminar este usuario?")) return;
+        if (!confirm("¿Está seguro que desea eliminar este usuario?")) return;
 
         try {
             await this.model.deleteUser(id);
-            this.view.showSuccess("Usuario eliminado");
+            this.view.showSuccess("Usuario eliminado correctamente");
             await this._loadUsers();
         } catch (error) {
             console.error("Error al eliminar usuario:", error);
