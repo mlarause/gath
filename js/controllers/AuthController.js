@@ -1,73 +1,101 @@
 class AuthController {
-    constructor(model, view) {
-        this.model = model;
+    constructor(view, model) {
         this.view = view;
-        
+        this.model = model;
+        this.init();
+    }
+
+    init() {
         // Configurar event listeners
-        if (this.view.loginForm) {
-            this.view.loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) {
+            loginForm.addEventListener('submit', (e) => this.handleLogin(e));
         }
-        
-        if (this.view.registerForm) {
-            this.view.registerForm.addEventListener('submit', (e) => this.handleRegister(e));
+
+        const registerForm = document.getElementById('registerForm');
+        if (registerForm) {
+            registerForm.addEventListener('submit', (e) => this.handleRegister(e));
         }
     }
 
-    // Manejar el evento de login
-    handleLogin(e) {
-        e.preventDefault();
+    handleLogin(event) {
+        event.preventDefault();
         
-        const { email, password } = this.view.getLoginData();
-        
-        // Validar campos
-        if (!email || !password) {
-            this.view.showLoginError('Todos los campos son obligatorios');
-            return;
-        }
-        
-        // Autenticar usuario
-        const user = this.model.authenticate(email, password);
-        
-        if (user) {
-            // Guardar usuario en sessionStorage
-            sessionStorage.setItem('currentUser', JSON.stringify(user));
-            
-            // Redirigir según el rol
-            if (user.role === 'admin') {
-                window.location.href = 'dashboard.html'; // A implementar en siguiente fase
-            } else {
-                window.location.href = 'user-dashboard.html'; // A implementar en siguiente fase
+        try {
+            // Obtener datos del formulario
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Validaciones básicas
+            if (!email || !password) {
+                throw new Error('Todos los campos son obligatorios');
             }
-        } else {
-            this.view.showLoginError('Credenciales incorrectas');
-            this.view.clearLoginForm();
+
+            // Autenticar usuario
+            const user = this.model.authenticate(email, password);
+            
+            if (user) {
+                // Guardar usuario en sessionStorage (sin información sensible)
+                sessionStorage.setItem('currentUser', JSON.stringify({
+                    id: user.id,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    email: user.email,
+                    role: user.role
+                }));
+
+                // Redirección basada en el rol
+                if (user.role === 'admin') {
+                    window.location.href = 'dashboard.html';
+                } else {
+                    window.location.href = 'user-dashboard.html';
+                }
+            } else {
+                throw new Error('Credenciales incorrectas');
+            }
+        } catch (error) {
+            console.error('Error en login:', error);
+            this.view.showError(error.message);
         }
     }
 
-    // Manejar el evento de registro
-    handleRegister(e) {
-        e.preventDefault();
+    handleRegister(event) {
+        event.preventDefault();
         
-        const userData = this.view.getRegisterData();
-        
-        // Validar campos
-        if (userData.email !== userData.confirmEmail) {
-            this.view.showRegisterError('Los correos electrónicos no coinciden');
-            return;
-        }
-        
-        if (userData.password !== userData.confirmPassword) {
-            this.view.showRegisterError('Las contraseñas no coinciden');
-            return;
-        }
-        
-        // Registrar usuario
-        const success = this.model.register(userData);
-        
-        if (success) {
-            this.view.showRegisterSuccess();
-        } else {
-            this.view.showRegisterError('El usuario ya existe (correo o documento)');
+        try {
+            // Obtener datos del formulario
+            const formData = {
+                documentNumber: document.getElementById('documentNumber').value,
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                confirmPassword: document.getElementById('confirmPassword').value,
+                role: 'user' // Rol por defecto
+            };
+
+            // Validaciones
+            if (formData.password !== formData.confirmPassword) {
+                throw new Error('Las contraseñas no coinciden');
+            }
+
+            // Crear usuario (eliminamos confirmPassword ya que no es necesario guardarlo)
+            delete formData.confirmPassword;
+            this.model.createUser(formData);
+
+            // Mostrar mensaje de éxito y redirigir
+            this.view.showSuccess('Registro exitoso. Redirigiendo...');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        } catch (error) {
+            console.error('Error en registro:', error);
+            this.view.showError(error.message);
         }
     }
+}
+
+// Exportación para módulos
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = AuthController;
 }
